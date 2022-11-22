@@ -1,0 +1,8 @@
+FROM postgres:14.1-alpine
+
+ENV POSTGRES_DB ${DB_NAME}
+
+COPY docker/create-tables.sql .
+
+# Preload database on init
+RUN [[ -e "create-tables.sql" ]] && cp create-tables.sql /docker-entrypoint-initdb.d/
