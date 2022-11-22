@@ -1,39 +1,32 @@
 import express, { NextFunction, Request, Response } from "express"
-import dotenv from "dotenv"
-import { Pool } from "pg"
-
-dotenv.config() //Reads .env file and makes it accessible via process.env
+import { connectToDB, createTable, getProducts, insertProducts } from "./db"
 
 const app = express()
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: parseInt(process.env.DB_PORT || "5432"),
-})
-
-console.log({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: parseInt(process.env.DB_PORT || "5432"),
-})
-
-const connectToDB = async () => {
-  try {
-    await pool.connect()
-  } catch (err) {
-    console.log("dbError:", err)
-  }
-}
-connectToDB()
+app.use(express.json())
 
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
   res.send("hi")
 })
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running at localhost:${process.env.PORT}/test`)
+app.get("/products/list", (req: Request, res: Response, next: NextFunction) => {
+  getProducts().then((r) => {
+    res.send(JSON.stringify(r))
+    console.log(r)
+  })
+})
+
+app.post(
+  "/products/insert",
+  (req: Request, res: Response, next: NextFunction) => {
+    insertProducts().then(() => res.send("INSERTED"))
+    console.log(req.body)
+
+    res.send("ok")
+  }
+)
+
+connectToDB().then(() => {
+  app.listen(process.env.PORT, () => {
+    console.log(`Server is running at localhost:${process.env.PORT}/test`)
+  })
 })
