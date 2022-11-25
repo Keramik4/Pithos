@@ -20,7 +20,8 @@ export const connectToDB = async () => {
   }
 }
 
-export const queryDb = (sql: string, params?: any[]) => {
+type DataQuery = <T>(sql: string, params?: any[]) => Promise<T[]>
+export const queryDb: DataQuery = (sql: string, params?: any[]) => {
   const start = Date.now()
 
   return new Promise((resolve, reject) => {
@@ -32,6 +33,9 @@ export const queryDb = (sql: string, params?: any[]) => {
           duration: Date.now() - start,
           rows: result.rowCount,
         })
+        if (result.rowCount === 0)
+          throw new Error("Query did not affect anything")
+
         resolve(result.rows)
       })
       .catch((err) => {
@@ -40,5 +44,3 @@ export const queryDb = (sql: string, params?: any[]) => {
       })
   })
 }
-
-export { createTable, getProducts, insertProducts } from "./products"
