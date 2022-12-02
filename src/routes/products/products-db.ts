@@ -1,9 +1,9 @@
 import { queryDb } from "../../db"
 
-type Product = {
+export type Product = {
   id: number
   name: string
-  capacityPerPalett: number
+  capacity: number
 }
 
 export const getProducts = () => {
@@ -23,7 +23,7 @@ export const getOneProduct = (id: number) => {
 
 export const insertProduct = (name: string, capacity: number) => {
   const query = `
-    INSERT INTO Products (id, name, capacityPerPalett)
+    INSERT INTO Products (id, name, capacity)
     VALUES ((SELECT Max(id) + 1 FROM Products), '${name}', '${capacity}');
   `
   return queryDb(query)
@@ -40,7 +40,7 @@ export const deleteProduct = (id: number) => {
 export const updateProduct = (id: number, name: string, capacity: number) => {
   const query = `
     UPDATE Products
-    SET name='${name}', capacityPerPalett='${capacity}'
+    SET name='${name}', capacity='${capacity}'
     WHERE id=${id};
 `
   return queryDb(query)

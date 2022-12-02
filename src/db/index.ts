@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 import { Pool } from "pg"
 
-dotenv.config() //Reads .env file and makes it accessible via process.env
+dotenv.config()
 
 const pool = new Pool({
   host: process.env.DB_HOST,
