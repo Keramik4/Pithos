@@ -1,87 +1,44 @@
-import { Router } from "express"
+import { buildSchema } from "graphql"
+import { graphqlHTTP } from "express-graphql"
 import {
-  getProducts,
-  getOneProduct,
-  insertProduct,
-  deleteProduct,
-  updateProduct,
-} from "./products-db"
-import { errorHandler } from "../../utils/response-handlers"
-import { validateId, validateProduct } from "./validation"
+  resolveList,
+  resolveProduct,
+  resolveAddProduct,
+  resolveDeleteProduct,
+  resolveUpdateProduct,
+} from "./resolvers"
 
-export const getProductsRouter = () => {
-  const router = Router({ mergeParams: true })
+const schema = buildSchema(`
+  type Mutation {
+    addProduct(name: String, capacity: Int): Status
+    deleteProduct(id: Int) : Status
+    updateProduct(id: Int!, capacity: Int, name: String): Status
+  }
 
-  router.get("/list", (req, res) => {
-    getProducts()
-      .then((products) => {
-        res.send(JSON.stringify(products))
-      })
-      .catch((e) => {
-        errorHandler(req, res, e)
-      })
-  })
+  type Query {
+    list: [Product]
+    product(id: Int): Product
+  }
 
-  router.get("/product", (req, res) => {
-    if (!validateId(req))
-      return errorHandler(req, res, new Error("Wrong request body"))
+  type Product {
+    id: Int
+    name: String
+    capacity: Int
+  }
 
-    const productId: number = req.body.id
+  type Status {
+    status: String
+  }
+`)
 
-    getOneProduct(productId)
-      .then((products) => {
-        const product = products[0]
-        res.send(JSON.stringify(product))
-      })
-      .catch((e) => {
-        errorHandler(req, res, e)
-      })
-  })
+const root = {
+  list: resolveList,
+  product: resolveProduct,
+  addProduct: resolveAddProduct,
+  deleteProduct: resolveDeleteProduct,
+  updateProduct: resolveUpdateProduct,
+}
 
-  router.post("/add", (req, res) => {
-    if (!validateProduct(req))
-      return errorHandler(req, res, new Error("Wrong request body"))
-
-    const { name, capacity } = req.body
-
-    insertProduct(name, capacity)
-      .then(() => {
-        res.send("ok")
-      })
-      .catch((e) => {
-        errorHandler(req, res, e)
-      })
-  })
-
-  router.post("/remove", (req, res) => {
-    if (!validateId(req))
-      return errorHandler(req, res, new Error("Wrong request body"))
-
-    const { id } = req.body
-
-    deleteProduct(id)
-      .then(() => {
-        res.send("ok")
-      })
-      .catch((e) => {
-        errorHandler(req, res, e)
-      })
-  })
-
-  router.post("/update", (req, res) => {
-    if (!validateId(req) || !validateProduct(req))
-      return errorHandler(req, res, new Error("Wrong request body"))
-
-    const { id, name, capacity } = req.body
-
-    updateProduct(id, name, capacity)
-      .then(() => {
-        res.send("ok")
-      })
-      .catch((e) => {
-        errorHandler(req, res, e)
-      })
-  })
-
-  return router
+export const getProductRouter = () => {
+  return graphqlHTTP({ schema: schema, rootValue: root, graphiql: true })
 }

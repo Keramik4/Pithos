@@ -1,13 +1,11 @@
 import express from "express"
 import { connectToDB } from "./db"
-import { getProductsRouter } from "./routes/products"
-import { getGraphQlRouter } from "./routes/products/graphQl-index"
+import { getProductRouter } from "./routes/products"
 
 const app = express()
 
 app.use(express.json())
-app.use("/products", getProductsRouter())
-app.use("/graphql", getGraphQlRouter())
+app.use("/products", getProductRouter())
 
 connectToDB().then(() => {
   app.listen(process.env.PORT, () => {

@@ -37,10 +37,16 @@ export const deleteProduct = (id: number) => {
   return queryDb(query)
 }
 
-export const updateProduct = (id: number, name: string, capacity: number) => {
+export const updateProduct = (id: number, name?: string, capacity?: number) => {
+  if (!name && !capacity) return Promise.reject()
+
+  const nameUpdater = name ? `name='${name}'` : ""
+  const comaQuery = name && capacity ? "," : ""
+  const capacityUpdater = capacity ? `capacity='${capacity}'` : ""
+
   const query = `
     UPDATE Products
-    SET name='${name}', capacity='${capacity}'
+    SET ${nameUpdater} ${comaQuery} ${capacityUpdater}
     WHERE id=${id};
 `
   return queryDb(query)

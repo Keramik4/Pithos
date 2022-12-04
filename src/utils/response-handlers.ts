@@ -1,9 +1,10 @@
 import { Request, Response } from "express"
 
-export const errorHandler = (req: Request, res: Response, error: any) => {
-  console.log(`ERROR for request: ${req.baseUrl}${req.path}`)
-  console.log(error)
+export type StatusObject = { status: string }
+export const getSuccessStatus = (): StatusObject => ({
+  status: "ok",
+})
 
-  res.status(500)
-  res.send("ERROR")
-}
+export const getErrorStatus = (): StatusObject => ({
+  status: "error",
+})
