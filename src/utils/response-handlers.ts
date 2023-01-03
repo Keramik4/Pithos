@@ -1,10 +1,13 @@
-import { Request, Response } from "express"
+enum Status {
+  success = "ok",
+  error = "error",
+}
 
 export type StatusObject = { status: string }
 export const getSuccessStatus = (): StatusObject => ({
-  status: "ok",
+  status: Status.success,
 })
 
 export const getErrorStatus = (): StatusObject => ({
-  status: "error",
+  status: Status.error,
 })

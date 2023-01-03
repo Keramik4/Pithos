@@ -15,8 +15,8 @@ import {
 export const resolveList = async () => await getProducts()
 
 type IdObject = Pick<Product, "id">
-type ProductResolvere = (prop: IdObject) => Promise<Product>
-export const resolveProduct: ProductResolvere = async ({ id }) => {
+
+export const resolveProduct = async ({ id }: { id: number }) => {
   const product = await getOneProduct(id)
 
   return product[0]
