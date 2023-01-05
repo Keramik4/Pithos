@@ -1,5 +1,5 @@
 import express from "express"
-import { connectToDB } from "./db"
+import { connectToDB } from "./db/"
 import { getProductRouter } from "./routes/products"
 
 const app = express()

@@ -1,10 +1,10 @@
-CREATE TABLE IF NOT EXISTS Products (
+CREATE TABLE IF NOT EXISTS Product (
   id SERIAL PRIMARY KEY,
   name varchar(255) NOT NULL,
   capacity int NOT NULL
 );
 
-INSERT INTO Products (name, capacity) VALUES
+INSERT INTO Product (name, capacity) VALUES
   ('BANANAS', 100),
   ('APPLES', 150),
   ('GRAPES', 80),
