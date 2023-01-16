@@ -12,12 +12,12 @@ const schema = buildSchema(`
   type Mutation {
     addProduct(name: String!, capacity: Int!): Product
     updateProduct(id: Int!, capacity: Int, name: String): Product
-    deleteProduct(id: Int) : Status
+    deleteProduct(id: Int!) : Status
   }
 
   type Query {
     list: [Product]!
-    product(id: Int): Product
+    product(id: Int!): Product
   }
 
 
