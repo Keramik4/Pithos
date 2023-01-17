@@ -1,3 +1,4 @@
+import { IsNull } from "typeorm"
 import { getStorageRepo } from "../db-connect"
 import { ResponseStatus } from "../../enums"
 
@@ -61,7 +62,41 @@ export const updateStorageName = async ({ id, name }: UpdateProp) => {
   }
 }
 
-//updateStorage
-//getAllEmptyStorages()
-//getSotragesByProuduct(id)
-//getStorageExpiredBy(date)
+export const getAllEmptyStorages = async () => {
+  try {
+    const list = await getStorageRepo().find({
+      where: [{ state: IsNull() }, { state: 0 }],
+    })
+    return list
+  } catch (err) {
+    console.log("getAllEmptyStorages ERROR:", err)
+    return []
+  }
+}
+
+export const getProductStorage = async ({
+  productId,
+}: {
+  productId: number
+}) => {
+  try {
+    const repo = getStorageRepo()
+    const list = await repo.find({
+      relations: {
+        product: true,
+      },
+      where: {
+        product: {
+          id: productId,
+        },
+      },
+    })
+
+    console.log(list[0])
+
+    return list
+  } catch (err) {
+    console.log("getAllEmptyStorages ERROR:", err)
+    return []
+  }
+}

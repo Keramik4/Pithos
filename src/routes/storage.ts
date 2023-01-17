@@ -5,7 +5,10 @@ import {
   addStorage,
   deleteStorage,
   updateStorageName,
+  getAllEmptyStorages,
+  getProductStorage,
 } from "../db"
+import { ProductSchema } from "./products"
 
 const schema = buildSchema(`
   type Mutation {
@@ -16,6 +19,8 @@ const schema = buildSchema(`
 
   type Query {
     list: [Storage]
+    listEmpty: [Storage]
+    listByProduct(productId: Int!): [Storage]
   }
 
   type Storage {
@@ -23,17 +28,21 @@ const schema = buildSchema(`
     name: String!
     state: Int
     expirationDate: String
-    productId: Int
+    product: Product
   }
 
   enum Status {
     success
     error
   }
+
+  ${ProductSchema}
 `)
 
 const root = {
   list: getAllStorages,
+  listEmpty: getAllEmptyStorages,
+  listByProduct: getProductStorage,
   addStorage,
   deleteStorage,
   updateStorageName,

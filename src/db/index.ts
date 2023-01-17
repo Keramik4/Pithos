@@ -11,4 +11,6 @@ export {
   addStorage,
   deleteStorage,
   updateStorageName,
+  getAllEmptyStorages,
+  getProductStorage,
 } from "./storage/storage-resolvers"
