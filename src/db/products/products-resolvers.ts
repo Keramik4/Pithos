@@ -77,7 +77,7 @@ export const deleteProduct = async ({ id }: IdObject) => {
     await getProductRepo().delete({ id })
     return ResponseStatus.success
   } catch (err) {
-    console.log("addProduct ERROR:", err)
+    console.log("deleteProduct ERROR:", err)
     return null
   }
 }

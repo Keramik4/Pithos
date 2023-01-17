@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm"
 import dotenv from "dotenv"
 import { Product } from "./products/product-entity"
+import { Storage } from "./storage/storage-entity"
 
 dotenv.config()
 
@@ -11,7 +12,8 @@ const dbSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [Product],
+  entities: [Product, Storage],
+  synchronize: false,
 })
 
 export const connectToDB = async () => {
@@ -24,3 +26,4 @@ export const connectToDB = async () => {
 }
 
 export const getProductRepo = () => dbSource.getRepository(Product)
+export const getStorageRepo = () => dbSource.getRepository(Storage)

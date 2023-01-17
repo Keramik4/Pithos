@@ -8,24 +8,27 @@ import {
   deleteProduct,
 } from "../db"
 
-const schema = buildSchema(`
-  type Mutation {
-    addProduct(name: String!, capacity: Int!): Product
-    updateProduct(id: Int!, capacity: Int, name: String): Product
-    deleteProduct(id: Int) : Status
-  }
-
-  type Query {
-    list: [Product]!
-    product(id: Int): Product
-  }
-
-
+export const ProductSchema = `
   type Product {
     id: Int
     name: String
     capacity: Int
   }
+`
+
+const schema = buildSchema(`
+  type Mutation {
+    addProduct(name: String!, capacity: Int!): Product
+    updateProduct(id: Int!, capacity: Int, name: String): Product
+    deleteProduct(id: Int!) : Status
+  }
+
+  type Query {
+    list: [Product]!
+    product(id: Int!): Product
+  }
+
+  ${ProductSchema}
 
   enum Status {
     success
